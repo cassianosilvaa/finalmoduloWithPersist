@@ -1,16 +1,49 @@
-import { Button, Checkbox, FormControlLabel, Grid, Link, Stack, Typography } from '@mui/material';
+import { Button, Grid, Link, Stack, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+import { selectUser, updateUser } from '../../../../store/modules/UserSlice';
 import UserType from '../../../../types/UserType';
 
 const FormUser: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const userRedux = useAppSelector(selectUser);
 
     const [user, setUser] = useState<UserType>({
         userName: '',
-        password: ''
+        password: '',
+        logged: false
     });
+
+    useEffect(() => {
+        const userLogin = userRedux.findIndex(item => item.logged);
+        if (userLogin !== -1) {
+            navigate('notes');
+        }
+    }, [userRedux, navigate]);
+
+    const handleLogin = () => {
+        if (user.userName.length < 6 || user.password.length < 6) {
+            alert('Os campos não foram preenchidos corretamente!');
+        } else {
+            const haveUser = userRedux.findIndex(item => item.userName === user.userName);
+            if (haveUser === -1) {
+                alert('Usuário não encontrado!');
+            }
+            const havePassword = userRedux[haveUser].password === user.password;
+            if (havePassword === false) {
+                alert('Senha incorreta!');
+            }
+            dispatch(
+                updateUser({
+                    id: user.userName,
+                    changes: { logged: true }
+                })
+            );
+        }
+    };
 
     return (
         <React.Fragment>
@@ -45,12 +78,22 @@ const FormUser: React.FC = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <FormControlLabel control={<Checkbox defaultChecked />} label="Manter conectado" />
                     <Stack direction="column" spacing={3}>
-                        <Button size="large" fullWidth={true} color="primary" variant="contained">
+                        <Button
+                            sx={{
+                                marginTop: '10px'
+                            }}
+                            size="large"
+                            fullWidth={true}
+                            color="primary"
+                            variant="contained"
+                            onClick={() => handleLogin()}
+                        >
                             ENTRAR
                         </Button>
-                        <Link onClick={() => navigate('/register')}>Não tem uma conta? Crie aqui! </Link>
+                        <Link style={{ cursor: 'pointer' }} onClick={() => navigate('/register')}>
+                            Não tem uma conta? Crie aqui!
+                        </Link>
                     </Stack>
                 </Grid>
             </Grid>

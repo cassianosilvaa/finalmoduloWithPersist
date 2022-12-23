@@ -2,7 +2,7 @@ interface UserType {
     userName: string;
     password: string;
     confirmPassword?: string;
-    notes?: string[];
+    logged?: boolean;
 }
 
 export default UserType;

@@ -15,10 +15,10 @@ const UserSlice = createSlice({
     initialState: adapter.getInitialState(),
     reducers: {
         addUser: adapter.addOne,
+        updateUser: adapter.updateOne,
         deleteUser: adapter.removeOne,
-        addManyUser: adapter.addMany
     }
 });
 
-export const { addUser, deleteUser, addManyUser } = UserSlice.actions;
+export const { addUser, deleteUser, updateUser } = UserSlice.actions;
 export default UserSlice.reducer;

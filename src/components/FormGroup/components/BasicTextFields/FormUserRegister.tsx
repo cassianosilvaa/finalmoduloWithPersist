@@ -1,6 +1,6 @@
 import { Button, Grid, Link, Stack, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
 import { addUser, selectUser } from '../../../../store/modules/UserSlice';
@@ -10,28 +10,24 @@ const FormUserRegister: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const [toSave, setToSave] = useState<boolean>(false);
     const [user, setUser] = useState<UserType>({
         userName: '',
         password: '',
         confirmPassword: '',
-        notes: []
+        logged: false
     });
+
     const inputUserName = useRef<HTMLInputElement | undefined>();
     const inputPassword = useRef<HTMLInputElement | undefined>();
     const inputConfirmPassword = useRef<HTMLInputElement | undefined>();
     const userRedux = useAppSelector(selectUser);
+    const loggedIndexOfUser = userRedux.findIndex(item => item.logged);
 
-    // useEffect(() => {
-    //     dispatch(addManyUser(logged()));
-    // }, []);
-
-    // useEffect(() => {
-    //     if (toSave) {
-    //         localStorage.setItem('User', JSON.stringify(userRedux));
-    //         return navigate('/');
-    //     }
-    // }, [userRedux]);
+    useEffect(() => {
+        if (loggedIndexOfUser !== -1) {
+            navigate('/notes');
+        }
+    }, [userRedux]);
 
     const handleSubmit = (): void => {
         if (user.userName.length < 6) {
@@ -40,8 +36,8 @@ const FormUserRegister: React.FC = () => {
             return;
         }
 
-        if (user.password.length < 4) {
-            alert('Senha: Mínimo 4 caractéres!');
+        if (user.password.length < 6) {
+            alert('Senha: Mínimo 6 caractéres!');
             inputPassword.current?.focus();
             return;
         } else if (user.password != user.confirmPassword) {
@@ -49,11 +45,13 @@ const FormUserRegister: React.FC = () => {
             inputConfirmPassword.current?.focus();
             return;
         }
+
         const newUser: UserType = {
             userName: user.userName,
             password: user.password,
-            notes: []
+            logged: false
         };
+
         dispatch(addUser(newUser));
         alert('Conta criada com sucesso, redirecionando para o login!');
         navigate('/');
@@ -132,7 +130,9 @@ const FormUserRegister: React.FC = () => {
                         >
                             CADASTRAR
                         </Button>
-                        <Link onClick={() => navigate('/')}>Já possui uma conta? Voltar. </Link>
+                        <Link style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
+                            Já possui uma conta? Voltar.{' '}
+                        </Link>
                     </Stack>
                 </Grid>
             </Grid>

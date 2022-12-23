@@ -5,10 +5,12 @@ import React from 'react';
 import { NoteType } from '../../../../types';
 
 interface ItemNoteProps {
-    notesType?: NoteType;
+    notesType: NoteType;
+    actionDelete: (notesType: NoteType) => void;
+    actionEdit?: () => void;
 }
 
-const ItemNote: React.FC<ItemNoteProps> = ({ notesType }) => {
+const ItemNote: React.FC<ItemNoteProps> = ({ notesType, actionDelete, actionEdit }) => {
     return (
         <>
             <ListItem
@@ -17,14 +19,17 @@ const ItemNote: React.FC<ItemNoteProps> = ({ notesType }) => {
                         <IconButton edge="end" aria-label="edit" sx={{ paddingRight: '20px' }}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton edge="end" aria-label="delete" sx={{ paddingRight: '20px' }}>
+                        <IconButton
+                            onClick={() => actionDelete(notesType)}
+                            edge="end"
+                            aria-label="delete"
+                            sx={{ paddingRight: '20px' }}
+                        >
                             <DeleteIcon />
                         </IconButton>
                     </>
                 }
             >
-                <TableCell align="right">ID:</TableCell>
-                <ListItemText primary={notesType?.id} />
                 <TableCell align="right">Descrição:</TableCell>
                 <ListItemText primary={notesType?.description} />
                 <TableCell align="right">Detalhe:</TableCell>

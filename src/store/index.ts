@@ -8,7 +8,7 @@ import rootReducer from './modules/rootReducer';
 const persistConfig = {
     key: 'root',
     storage,
-    withelist: ['users'],
+    whitelist: ['notes', 'users']
 };
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);

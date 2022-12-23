@@ -1,11 +1,15 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectUser } from '../store/modules/UserSlice';
 import NoteFormProps from '../types/NoteFormProps';
 
 const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
     const [description, setDescription] = useState<string>('');
     const [detail, setDetail] = useState<string>('');
     const [id, setId] = useState<number>(Math.floor(Date.now() / 1000));
+    const userRedux = useAppSelector(selectUser);
+    const userLogged = userRedux.find(item => item.logged);
 
     const handleClear = () => {
         setDescription('');
@@ -20,19 +24,16 @@ const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
         } else {
             alert('As notas foram adicionada com sucesso!');
             setId(Math.floor(Date.now() / 1000));
-            action({ description, detail, id });
+            action({ userName: userLogged?.userName as string, description, detail, id });
             handleClear();
         }
     };
 
     return (
         <Grid container spacing={2} margin={2} alignItems={'center'} direction={'column'} justifyContent={'center'}>
-            <Grid item xs={3} sm={4}>
+            <Grid item xs={12} sx={{ backgroundColor: 'red' }} sm={12}>
                 <TextField
-                    inputProps={{ maxLength: 35 }}
-                    sx={{
-                        width: '300px'
-                    }}
+                    inputProps={{ maxLength: 20 }}
                     id="outlined-basic"
                     onChange={ev => setDescription(ev.target.value)}
                     label="Descrição"
@@ -41,12 +42,9 @@ const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
                     fullWidth
                 />
             </Grid>
-            <Grid item xs={3} sm={4}>
+            <Grid item xs={12} sm={12}>
                 <TextField
-                    inputProps={{ maxLength: 35 }}
-                    sx={{
-                        minWidth: '300px'
-                    }}
+                    inputProps={{ maxLength: 20 }}
                     id="outlined-basic"
                     onChange={ev => setDetail(ev.target.value)}
                     label="Detalhe"
