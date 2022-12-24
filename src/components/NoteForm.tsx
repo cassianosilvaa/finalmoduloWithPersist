@@ -30,8 +30,8 @@ const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
     };
 
     return (
-        <Grid container spacing={2} margin={2} alignItems={'center'} direction={'column'} justifyContent={'center'}>
-            <Grid item xs={12} sx={{ backgroundColor: 'red' }} sm={12}>
+        <Grid container alignItems={'center'} direction={'row'} marginTop={4} justifyContent={'center'}>
+            <Grid item xs={6} sm={3} margin={3}>
                 <TextField
                     inputProps={{ maxLength: 20 }}
                     id="outlined-basic"
@@ -42,7 +42,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
                     fullWidth
                 />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={6} sm={3} margin={3}>
                 <TextField
                     inputProps={{ maxLength: 20 }}
                     id="outlined-basic"
@@ -53,14 +53,19 @@ const NoteForm: React.FC<NoteFormProps> = ({ action }) => {
                     fullWidth
                 />
             </Grid>
-            <Grid item xs={12} sm={4}>
-                <Grid container spacing={2}>
+            <Grid item xs={12} sm={3}>
+                <Grid container spacing={2} display={'flex'} justifyContent={'center'}>
                     <Grid item>
-                        <Button color="error" onClick={handleClear} variant="outlined">
+                        <Button
+                            sx={{
+                                margin: '10px'
+                            }}
+                            color="error"
+                            onClick={handleClear}
+                            variant="outlined"
+                        >
                             Limpar
                         </Button>
-                    </Grid>
-                    <Grid item>
                         <Button color="success" onClick={handleSubmit} variant="contained">
                             Cadastrar
                         </Button>

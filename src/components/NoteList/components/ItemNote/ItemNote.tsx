@@ -7,7 +7,7 @@ import { NoteType } from '../../../../types';
 interface ItemNoteProps {
     notesType: NoteType;
     actionDelete: (notesType: NoteType) => void;
-    actionEdit?: () => void;
+    actionEdit: (notesType: NoteType) => void;
 }
 
 const ItemNote: React.FC<ItemNoteProps> = ({ notesType, actionDelete, actionEdit }) => {
@@ -16,7 +16,12 @@ const ItemNote: React.FC<ItemNoteProps> = ({ notesType, actionDelete, actionEdit
             <ListItem
                 secondaryAction={
                     <>
-                        <IconButton edge="end" aria-label="edit" sx={{ paddingRight: '20px' }}>
+                        <IconButton
+                            onClick={() => actionEdit(notesType)}
+                            edge="end"
+                            aria-label="edit"
+                            sx={{ paddingRight: '20px' }}
+                        >
                             <EditIcon />
                         </IconButton>
                         <IconButton

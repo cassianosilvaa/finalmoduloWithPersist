@@ -15,9 +15,10 @@ const NoteSlice = createSlice({
     initialState: adapter.getInitialState(),
     reducers: {
         addNote: adapter.addOne,
-        removeNote: adapter.removeOne
+        removeNote: adapter.removeOne,
+        updateNote: adapter.updateOne
     }
 });
 
-export const { addNote, removeNote } = NoteSlice.actions;
+export const { addNote, removeNote, updateNote } = NoteSlice.actions;
 export default NoteSlice.reducer;
