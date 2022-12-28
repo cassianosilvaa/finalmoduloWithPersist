@@ -30,6 +30,14 @@ const FormUserRegister: React.FC = () => {
     }, [userRedux]);
 
     const handleSubmit = (): void => {
+        const haveUser = userRedux.find(item => item.userName);
+
+        if (haveUser) {
+            alert('Nome de usuário já está sendo usado!');
+            inputUserName.current?.focus();
+            return;
+        }
+
         if (user.userName.length < 6) {
             alert('Nome de usuário: Mínimo 6 caractéres!');
             inputUserName.current?.focus();
