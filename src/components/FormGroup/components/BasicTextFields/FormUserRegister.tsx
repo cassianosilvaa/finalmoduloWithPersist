@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
-import { addUser, selectUser } from '../../../../store/modules/UserSlice';
+import { addUser, selectUser, selectUserById } from '../../../../store/modules/UserSlice';
 import UserType from '../../../../types/UserType';
 
 const FormUserRegister: React.FC = () => {
@@ -22,6 +22,7 @@ const FormUserRegister: React.FC = () => {
     const inputConfirmPassword = useRef<HTMLInputElement | undefined>();
     const userRedux = useAppSelector(selectUser);
     const loggedIndexOfUser = userRedux.findIndex(item => item.logged);
+    const haveUser = useAppSelector(state => selectUserById(state, user.userName));
 
     useEffect(() => {
         if (loggedIndexOfUser !== -1) {
@@ -30,27 +31,24 @@ const FormUserRegister: React.FC = () => {
     }, [userRedux]);
 
     const handleSubmit = (): void => {
-        const haveUser = userRedux.find(item => item.userName);
-
-        if (haveUser) {
-            alert('Nome de usuário já está sendo usado!');
-            inputUserName.current?.focus();
-            return;
-        }
-
         if (user.userName.length < 6) {
             alert('Nome de usuário: Mínimo 6 caractéres!');
             inputUserName.current?.focus();
             return;
         }
-
         if (user.password.length < 6) {
             alert('Senha: Mínimo 6 caractéres!');
             inputPassword.current?.focus();
             return;
-        } else if (user.password != user.confirmPassword) {
+        }
+        if (user.password != user.confirmPassword) {
             alert('As senhas não coincidem!');
             inputConfirmPassword.current?.focus();
+            return;
+        }
+        if (haveUser) {
+            alert('Nome de usuário já está sendo usado!');
+            inputUserName.current?.focus();
             return;
         }
 
@@ -83,9 +81,16 @@ const FormUserRegister: React.FC = () => {
                         label="Nome de usuário"
                         variant="outlined"
                         value={user.userName}
-                        onChange={ev => setUser({ userName: ev.target.value, password: user.password })}
+                        onChange={ev =>
+                            setUser({
+                                userName: ev.target.value,
+                                password: user.password,
+                                confirmPassword: user.confirmPassword
+                            })
+                        }
                     />
                 </Grid>
+
                 <Grid item xs={12} marginTop={2}>
                     <TextField
                         required
@@ -94,7 +99,6 @@ const FormUserRegister: React.FC = () => {
                         label="Senha"
                         type="password"
                         inputRef={inputPassword}
-                        autoComplete="current-password"
                         value={user.password}
                         onChange={ev =>
                             setUser({
@@ -113,7 +117,6 @@ const FormUserRegister: React.FC = () => {
                         label="Confirme a sua senha"
                         type="password"
                         inputRef={inputConfirmPassword}
-                        autoComplete="current-password"
                         value={user.confirmPassword}
                         onChange={ev =>
                             setUser({
