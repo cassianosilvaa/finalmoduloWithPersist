@@ -1,4 +1,16 @@
-import { Button, Grid, Link, Stack, Typography } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+    Button,
+    FormControl,
+    Grid,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    Link,
+    OutlinedInput,
+    Stack,
+    Typography
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +19,14 @@ import { selectUser, updateUser } from '../../../../store/modules/UserSlice';
 import UserType from '../../../../types/UserType';
 
 const FormUser: React.FC = () => {
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword(show => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const userRedux = useAppSelector(selectUser);
@@ -30,11 +50,13 @@ const FormUser: React.FC = () => {
         } else {
             const haveUser = userRedux.findIndex(item => item.userName === user.userName);
             if (haveUser === -1) {
-                alert('Usuário não encontrado!');
+                alert('Usuário ou senha incorreto!');
+                return;
             }
             const havePassword = userRedux[haveUser].password === user.password;
             if (havePassword === false) {
-                alert('Senha incorreta!');
+                alert('Usuário ou senha incorreto!');
+                return;
             }
             dispatch(
                 updateUser({
@@ -66,7 +88,29 @@ const FormUser: React.FC = () => {
                     />
                 </Grid>
                 <Grid item xs={12} marginTop={2}>
-                    <TextField
+                    <FormControl variant="outlined" fullWidth>
+                        <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Senha"
+                            value={user.password}
+                            onChange={ev => setUser({ userName: user.userName, password: ev.target.value })}
+                        />
+                    </FormControl>
+                    {/* <TextField
                         required
                         id="iptPassword"
                         fullWidth={true}
@@ -75,7 +119,7 @@ const FormUser: React.FC = () => {
                         autoComplete="current-password"
                         value={user.password}
                         onChange={ev => setUser({ userName: user.userName, password: ev.target.value })}
-                    />
+                    /> */}
                 </Grid>
                 <Grid item xs={12}>
                     <Stack direction="column" spacing={3}>

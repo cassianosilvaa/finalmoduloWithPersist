@@ -30,7 +30,6 @@ const Notes: React.FC = () => {
     const [editDescription, setEditDescription] = useState<string>('');
     const [editDetail, setEditDetail] = useState<string>('');
     const [id, setId] = useState<number>();
-    
 
     const navigate = useNavigate();
 
@@ -110,18 +109,18 @@ const Notes: React.FC = () => {
                 sx={{ marginLeft: '20px', marginTop: '20px', cursor: 'pointer' }}
             ></LogoutIcon>
             <NoteForm action={handleAddNote} />
-                <Paper elevation={2} sx={{ padding: '5px' }}>
-                    {notesUser.map(item => {
-                        return (
-                            <ItemNote
-                                actionDelete={() => handleDeleteNote(item)}
-                                actionEdit={() => openEditModal(item)}
-                                key={item.id}
-                                notesType={item}
-                            />
-                        );
-                    })}
-                </Paper>
+            <Paper elevation={2} sx={{ padding: '5px' }}>
+                {notesUser.map(item => {
+                    return (
+                        <ItemNote
+                            actionDelete={() => handleDeleteNote(item)}
+                            actionEdit={() => openEditModal(item)}
+                            key={item.id}
+                            notesType={item}
+                        />
+                    );
+                })}
+            </Paper>
             <Dialog open={openEdit} onClose={handleClose}>
                 <DialogTitle>Editar nota!</DialogTitle>
                 <DialogContent>
