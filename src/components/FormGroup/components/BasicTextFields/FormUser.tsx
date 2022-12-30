@@ -110,16 +110,6 @@ const FormUser: React.FC = () => {
                             onChange={ev => setUser({ userName: user.userName, password: ev.target.value })}
                         />
                     </FormControl>
-                    {/* <TextField
-                        required
-                        id="iptPassword"
-                        fullWidth={true}
-                        label="Senha"
-                        type="password"
-                        autoComplete="current-password"
-                        value={user.password}
-                        onChange={ev => setUser({ userName: user.userName, password: ev.target.value })}
-                    /> */}
                 </Grid>
                 <Grid item xs={12}>
                     <Stack direction="column" spacing={3}>
